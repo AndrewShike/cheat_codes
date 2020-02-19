@@ -298,10 +298,29 @@ function snap_to_bars(bank,bar_count)
     end
     print("after total: "..total_time)
     midi_clock_linearize(bank)
+    --snap_to_bars_midi(bank,bar_count)
   end
 end
 
 function snap_to_bars_midi(bank,bar_count)
+  g_p_q[bank].event = {}
+  for i = 1,grid_pat[bank].count do
+    g_p_q[bank].clicks[i] = math.floor((grid_pat[bank].time[i] / ((60/bpm)/4))+0.5)
+    g_p_q[bank].event[i] = {} -- critical
+    if grid_pat[bank].time[i] == 0 or g_p_q[bank].clicks[i] == 0 then
+      g_p_q[bank].event[i][1] = "nothing"
+    else
+      for j = 1,g_p_q[bank].clicks[i] do
+        if j == 1 then
+          g_p_q[bank].event[i][1] = "something"
+        else
+          g_p_q[bank].event[i][j] = "nothing"
+        end
+      end
+    end
+  end
+  g_p_q[bank].current_step = 1
+  g_p_q[bank].sub_step = 1
   local entry_count = 0
   local target_entry_count = bar_count*16
   for i = 1,#g_p_q[bank].event do
@@ -324,7 +343,7 @@ function snap_to_bars_midi(bank,bar_count)
         print("skip: "..g_p_q[bank].event[last_event][#g_p_q[bank].event[last_event]])
         if last_event > 0 then last_event = last_event - 1 end
         print("minus 1!: "..last_event)
-        if #g_p_q[bank].event[last_event] > 1 then
+        if #g_p_q[bank].event[last_event] ~= nil and #g_p_q[bank].event[last_event] > 1 then
           print("removing "..g_p_q[bank].event[last_event][#g_p_q[bank].event[last_event]])
           table.remove(g_p_q[bank].event[last_event])
         end
@@ -340,6 +359,63 @@ function snap_to_bars_midi(bank,bar_count)
     entry_count = entry_count + #g_p_q[bank].event[i]
   end
   print("after: "..entry_count)
+end
+
+function save_external_timing(bank,slot)
+  local file = io.open(_path.data .. "cheat_codes/pattern"..selected_coll.."_"..slot.."_external-timing.data", "w+")
+  io.output(file)
+  io.write("external clock timing for stored pad pattern: collection "..selected_coll.." + slot "..slot.."\n")
+  local total_entry_count = 0
+  local number_of_events = #g_p_q[bank].event
+  for i = 1,number_of_events do
+    total_entry_count = total_entry_count + #g_p_q[bank].event[i]
+  end
+  io.write(total_entry_count.."\n")
+  io.write(number_of_events.."\n")
+  for i = 1,number_of_events do
+    io.write("event: "..i.."\n")
+    io.write("total entries: "..#g_p_q[bank].event[i].."\n")
+    for j = 1,#g_p_q[bank].event[i] do
+      io.write(g_p_q[bank].event[i][j].."\n")
+    end
+  end
+  io.close(file)
+  print("saved external timing for pattern "..bank.." to slot "..slot)
+end
+
+function load_external_timing(bank,slot)
+  local file = io.open(_path.data .. "cheat_codes/pattern"..selected_coll.."_"..slot.."_external-timing.data", "r")
+  if file then
+    io.input(file)
+    if io.read() == "external clock timing for stored pad pattern: collection "..selected_coll.." + slot "..slot then
+      g_p_q[bank].event = {}
+      local total_entry_count = tonumber(io.read())
+      print("total entry count: "..total_entry_count)
+      local number_of_events = tonumber(io.read())
+      print("number of events: "..number_of_events)
+      for i = 1,number_of_events do
+        local event_id = tonumber(string.match(io.read(), '%d+'))
+        print("event id: "..event_id)
+        local entry_count = tonumber(string.match(io.read(), '%d+'))
+        print("entry count: "..entry_count)
+        g_p_q[bank].event[i] = {}
+        for j = 1,entry_count do
+          g_p_q[bank].event[i][j] = io.read()
+        end
+      end
+    end
+    io.close(file)
+  else
+    print("nofile")
+  end
+end
+
+function c_q(bank)
+  local entry_count = 0
+  for i = 1,#g_p_q[bank].event do
+    entry_count = entry_count + #g_p_q[bank].event[i]
+  end
+  print("current: "..entry_count)
 end
 
 function reset_pattern_time(bank)
@@ -2228,6 +2304,7 @@ function save_pattern(source,slot)
   io.write(original_pattern[source].metro.props.time .. "\n")
   io.write(original_pattern[source].prev_time .. "\n")
   io.close(file)
+  save_external_timing(source,slot)
   print("saved pattern "..source.." to slot "..slot)
 end
 
@@ -2458,8 +2535,9 @@ function load_pattern(slot,destination)
       grid_pat[destination].metro.props.time = tonumber(io.read())
       grid_pat[destination].prev_time = tonumber(io.read())
     end
-    midi_clock_linearize(destination)
+    --midi_clock_linearize(destination)
     io.close(file)
+    load_external_timing(destination,slot)
   else
     print("nofile")
   end
