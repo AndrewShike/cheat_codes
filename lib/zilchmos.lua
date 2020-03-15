@@ -9,10 +9,10 @@ function zilchmos.init(k,i)
     if fingers[k][i].con == "1" then
       if k == 4 then
         if grid.alt == 0 then
-          bank[i][bank[i].id].start_point = (8*(bank[i][bank[i].id].clip-1)) + 1
+          bank[i][bank[i].id].start_point = (eight*(bank[i][bank[i].id].clip-1)) + 1
         else
           for j = 1,16 do
-            bank[i][j].start_point = (8*(bank[i][j].clip-1)) + 1
+            bank[i][j].start_point = (eight*(bank[i][j].clip-1)) + 1
           end
         end
         softcut.loop_start(i+1,bank[i][bank[i].id].start_point)
@@ -46,10 +46,10 @@ function zilchmos.init(k,i)
     if fingers[k][i].con == "2" then
       if k == 4 then
         if grid.alt == 0 then
-          bank[i][bank[i].id].start_point = 1+((8/16)*(bank[i].id-1))
+          bank[i][bank[i].id].start_point = 1+((eight/16)*(bank[i].id-1))
         else
           for j = 1,16 do
-            bank[i][j].start_point = 1+((8/16)*(j-1))
+            bank[i][j].start_point = 1+((eight/16)*(j-1))
           end
         end
         softcut.loop_start(i+1,bank[i][bank[i].id].start_point)
@@ -83,10 +83,10 @@ function zilchmos.init(k,i)
     if fingers[k][i].con == "3" then
       if k == 4 then
         if grid.alt == 0 then
-          bank[i][bank[i].id].end_point = 1+((8/16)*bank[i].id)
+          bank[i][bank[i].id].end_point = 1+((eight/16)*bank[i].id)
         else
           for j= 1,16 do
-            bank[i][j].end_point = 1+((8/16)*j)
+            bank[i][j].end_point = 1+((eight/16)*j)
           end
         end
         softcut.loop_end(i+1,bank[i][bank[i].id].end_point)
@@ -103,10 +103,10 @@ function zilchmos.init(k,i)
     end
     if fingers[k][i].con == "4" then
       if grid.alt == 0 then
-        bank[i][bank[i].id].end_point = (8*bank[i][bank[i].id].clip)+1
+        bank[i][bank[i].id].end_point = (eight*bank[i][bank[i].id].clip)+1
       else
         for j = 1,16 do
-          bank[i][j].end_point = (8*bank[i][j].clip)+1
+          bank[i][j].end_point = (eight*bank[i][j].clip)+1
         end
       end
       softcut.loop_end(i+1,bank[i][bank[i].id].end_point)
@@ -115,12 +115,12 @@ function zilchmos.init(k,i)
       if k == 4 then
         if grid.alt == 0 then
           local current_end = math.floor(bank[i][bank[i].id].end_point * 100)
-          local min_start = math.floor(((8*(bank[i][bank[i].id].clip-1))+1) * 100)
+          local min_start = math.floor(((eight*(bank[i][bank[i].id].clip-1))+1) * 100)
           bank[i][bank[i].id].start_point = math.random(min_start,current_end)/100
         else
           for j = 1,16 do
             local current_end = math.floor(bank[i][j].end_point*100)
-            local min_start = math.floor(((8*(bank[i][j].clip-1))+1) * 100)
+            local min_start = math.floor(((eight*(bank[i][j].clip-1))+1) * 100)
             bank[i][j].start_point = math.random(min_start,current_end)/100
           end
         end
@@ -172,10 +172,10 @@ function zilchmos.init(k,i)
     if fingers[k][i].con == "23" then
       if k == 4 then
         if grid.alt == 0 then
-          local jump = math.random(100,900)/100+(8*(bank[i][bank[i].id].clip-1))
+          local jump = math.random(100,(eight+1) * 100)/100+(eight*(bank[i][bank[i].id].clip-1))
           local current_difference = (bank[i][bank[i].id].end_point - bank[i][bank[i].id].start_point)
-          if jump+current_difference >= 9+(8*(bank[i][bank[i].id].clip-1)) then
-            bank[i][bank[i].id].end_point = 9+(8*(bank[i][bank[i].id].clip-1))
+          if jump+current_difference >= (eight+1)+(eight*(bank[i][bank[i].id].clip-1)) then
+            bank[i][bank[i].id].end_point = (eight+1)+(eight*(bank[i][bank[i].id].clip-1))
             bank[i][bank[i].id].start_point = bank[i][bank[i].id].end_point - current_difference
           else
             bank[i][bank[i].id].start_point = jump
@@ -183,10 +183,10 @@ function zilchmos.init(k,i)
           end
         else
           for j = 1,16 do
-            local jump = math.random(100,900)/100+(8*(bank[i][j].clip-1))
+            local jump = math.random(100,(eight+1) * 100)/100+(eight*(bank[i][j].clip-1))
             local current_difference = (bank[i][j].end_point - bank[i][j].start_point)
-            if jump+current_difference >= 9+(8*(bank[i][j].clip-1)) then
-              bank[i][j].end_point = 9+(8*(bank[i][j].clip-1))
+            if jump+current_difference >= (eight+1)+(eight*(bank[i][j].clip-1)) then
+              bank[i][j].end_point = (eight+1)+(eight*(bank[i][j].clip-1))
               bank[i][j].start_point = bank[i][j].end_point - current_difference
             else
               bank[i][j].start_point = jump
@@ -214,12 +214,12 @@ function zilchmos.init(k,i)
     if fingers[k][i].con == "34" then
         if grid.alt == 0 then
           local current_start = math.floor(bank[i][bank[i].id].start_point * 100)
-          local max_end = math.floor(((8*bank[i][bank[i].id].clip)+1) * 100)
+          local max_end = math.floor(((eight*bank[i][bank[i].id].clip)+1) * 100)
           bank[i][bank[i].id].end_point = math.random(current_start,max_end)/100
         else
           for j = 1,16 do
             local current_start = math.floor(bank[i][j].start_point * 100)
-            local max_end = math.floor(((8*bank[i][j].clip)+1) * 100)
+            local max_end = math.floor(((eight*bank[i][j].clip)+1) * 100)
             bank[i][j].end_point = math.random(current_start,max_end)/100
           end
         end
@@ -327,11 +327,11 @@ function zilchmos.init(k,i)
     if fingers[k][i].con == "123" then
       if k == 4 then
         if i == 1 then
-          bank[i][bank[i].id].start_point = bank[2][bank[2].id].start_point - (8*(bank[2][bank[2].id].clip-1))
-          bank[i][bank[i].id].end_point = bank[2][bank[2].id].end_point - (8*(bank[2][bank[2].id].clip-1))
+          bank[i][bank[i].id].start_point = bank[2][bank[2].id].start_point - (eight*(bank[2][bank[2].id].clip-1))
+          bank[i][bank[i].id].end_point = bank[2][bank[2].id].end_point - (eight*(bank[2][bank[2].id].clip-1))
         elseif i == 2 or 3 then
-          bank[i][bank[i].id].start_point = bank[1][bank[1].id].start_point + (8*(bank[i][bank[i].id].clip-1))
-          bank[i][bank[i].id].end_point = bank[1][bank[1].id].end_point + (8*(bank[i][bank[i].id].clip-1))
+          bank[i][bank[i].id].start_point = bank[1][bank[1].id].start_point + (eight*(bank[i][bank[i].id].clip-1))
+          bank[i][bank[i].id].end_point = bank[1][bank[1].id].end_point + (eight*(bank[i][bank[i].id].clip-1))
         end
         softcut.loop_start(i+1,bank[i][bank[i].id].start_point)
         softcut.loop_end(i+1,bank[i][bank[i].id].end_point)
@@ -350,11 +350,11 @@ function zilchmos.init(k,i)
     if fingers[k][i].con == "234" then
       if k == 4 then
         if i == 3 then
-          bank[3][bank[3].id].start_point = (bank[2][bank[2].id].start_point - (8*(bank[2][bank[2].id].clip-1))) + (8*(bank[3][bank[3].id].clip-1))
-          bank[3][bank[3].id].end_point = (bank[2][bank[2].id].end_point - (8*(bank[2][bank[2].id].clip-1))) + (8*(bank[3][bank[3].id].clip-1))
+          bank[3][bank[3].id].start_point = (bank[2][bank[2].id].start_point - (eight*(bank[2][bank[2].id].clip-1))) + (eight*(bank[3][bank[3].id].clip-1))
+          bank[3][bank[3].id].end_point = (bank[2][bank[2].id].end_point - (eight*(bank[2][bank[2].id].clip-1))) + (eight*(bank[3][bank[3].id].clip-1))
         elseif i == 1 or 2 then
-          bank[i][bank[i].id].start_point = (bank[3][bank[3].id].start_point - (8*(bank[3][bank[3].id].clip-1))) + (8*(bank[i][bank[i].id].clip-1))
-          bank[i][bank[i].id].end_point = (bank[3][bank[3].id].end_point - (8*(bank[3][bank[3].id].clip-1))) + (8*(bank[i][bank[i].id].clip-1))
+          bank[i][bank[i].id].start_point = (bank[3][bank[3].id].start_point - (eight*(bank[3][bank[3].id].clip-1))) + (eight*(bank[i][bank[i].id].clip-1))
+          bank[i][bank[i].id].end_point = (bank[3][bank[3].id].end_point - (eight*(bank[3][bank[3].id].clip-1))) + (eight*(bank[i][bank[i].id].clip-1))
         end
         softcut.loop_start(i+1,bank[i][bank[i].id].start_point)
         softcut.loop_end(i+1,bank[i][bank[i].id].end_point)

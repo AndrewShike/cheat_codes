@@ -8,15 +8,15 @@ function encoder_actions.init(n,d)
         if key1_hold or grid.alt == 1 then
           bank[id].id = util.clamp(bank[id].id + d,1,16)
           selected[id].x = (math.ceil(bank[id].id/4)+(5*(id-1)))
-          selected[id].y = 8-((bank[id].id-1)%4)
+          selected[id].y = eight-((bank[id].id-1)%4)
           cheat(id,bank[id].id)
         else
           local current_difference = (bank[id][bank[id].id].end_point - bank[id][bank[id].id].start_point)
-          if bank[id][bank[id].id].start_point + current_difference <= (9+(8*(bank[id][bank[id].id].clip-1))) then
-            bank[id][bank[id].id].start_point = util.clamp(bank[id][bank[id].id].start_point + d/loop_enc_resolution,(1+(8*(bank[id][bank[id].id].clip-1))),(9+(8*(bank[id][bank[id].id].clip-1))))
+          if bank[id][bank[id].id].start_point + current_difference <= ((eight+1)+(eight*(bank[id][bank[id].id].clip-1))) then
+            bank[id][bank[id].id].start_point = util.clamp(bank[id][bank[id].id].start_point + d/loop_enc_resolution,(1+(eight*(bank[id][bank[id].id].clip-1))),((eight+1)+(eight*(bank[id][bank[id].id].clip-1))))
             bank[id][bank[id].id].end_point = bank[id][bank[id].id].start_point + current_difference
           else
-            bank[id][bank[id].id].end_point = (9+(8*(bank[id][bank[id].id].clip-1)))
+            bank[id][bank[id].id].end_point = ((eight+1)+(eight*(bank[id][bank[id].id].clip-1)))
             bank[id][bank[id].id].start_point = bank[id][bank[id].id].end_point - current_difference
           end
         end
@@ -27,15 +27,15 @@ function encoder_actions.init(n,d)
           local pre_adjust = rec.clip
           local current_difference = (rec.end_point - rec.start_point)
           rec.clip = util.clamp(rec.clip+d,1,3)
-          rec.start_point = rec.start_point - ((pre_adjust - rec.clip)*8)
+          rec.start_point = rec.start_point - ((pre_adjust - rec.clip)*eight)
           rec.end_point = rec.start_point + current_difference
         else
           local current_difference = (rec.end_point - rec.start_point)
-          if rec.start_point + current_difference <= (9+(8*(rec.clip-1))) then
-            rec.start_point = util.clamp(rec.start_point + d/10,(1+(8*(rec.clip-1))),(9+(8*(rec.clip-1))))
+          if rec.start_point + current_difference <= ((eight+1)+(eight*(rec.clip-1))) then
+            rec.start_point = util.clamp(rec.start_point + d/10,(1+(eight*(rec.clip-1))),((eight+1)+(eight*(rec.clip-1))))
             rec.end_point = rec.start_point + current_difference
           else
-            rec.end_point = (9+(8*(rec.clip-1)))
+            rec.end_point = ((eight+1)+(eight*(rec.clip-1)))
             rec.start_point = rec.end_point - current_difference
           end
         end
@@ -66,7 +66,7 @@ function encoder_actions.init(n,d)
           else
             bank[id][bank[id].id].clip = util.clamp(bank[id][bank[id].id].clip+d,1,3)
           end
-          bank[id][bank[id].id].start_point = bank[id][bank[id].id].start_point - ((pre_adjust - bank[id][bank[id].id].clip)*8)
+          bank[id][bank[id].id].start_point = bank[id][bank[id].id].start_point - ((pre_adjust - bank[id][bank[id].id].clip)*eight)
           bank[id][bank[id].id].end_point = bank[id][bank[id].id].start_point + current_difference
           cheat(id,bank[id].id)
           if bank[id].id == 16 then
@@ -75,15 +75,15 @@ function encoder_actions.init(n,d)
               bank[id][i].mode = bank[id][16].mode
               bank[id][i].clip = bank[id][16].clip
               local current_difference = (bank[id][i].end_point - bank[id][i].start_point)
-              bank[id][i].start_point = bank[id][i].start_point - ((pre_adjust - bank[id][i].clip)*8)
+              bank[id][i].start_point = bank[id][i].start_point - ((pre_adjust - bank[id][i].clip)*eight)
               bank[id][i].end_point = bank[id][i].start_point + current_difference
             end
           end
         elseif key1_hold == false and grid.alt == 0 then
           if d >= 0 and bank[id][bank[id].id].start_point < (bank[id][bank[id].id].end_point - d/loop_enc_resolution) then
-            bank[id][bank[id].id].start_point = util.clamp(bank[id][bank[id].id].start_point+d/loop_enc_resolution,(1+(8*(bank[id][bank[id].id].clip-1))),(8.9+(8*(bank[id][bank[id].id].clip-1))))
+            bank[id][bank[id].id].start_point = util.clamp(bank[id][bank[id].id].start_point+d/loop_enc_resolution,(1+(eight*(bank[id][bank[id].id].clip-1))),(eight+0.9+(eight*(bank[id][bank[id].id].clip-1))))
           elseif d < 0 then
-            bank[id][bank[id].id].start_point = util.clamp(bank[id][bank[id].id].start_point+d/loop_enc_resolution,(1+(8*(bank[id][bank[id].id].clip-1))),(8.9+(8*(bank[id][bank[id].id].clip-1))))
+            bank[id][bank[id].id].start_point = util.clamp(bank[id][bank[id].id].start_point+d/loop_enc_resolution,(1+(eight*(bank[id][bank[id].id].clip-1))),(eight+0.9+(eight*(bank[id][bank[id].id].clip-1))))
           end
           softcut.loop_start(id+1, bank[id][bank[id].id].start_point)
         end
@@ -104,9 +104,9 @@ function encoder_actions.init(n,d)
           end
         else
           if d >= 0 and rec.start_point < (rec.end_point - d/10) then
-            rec.start_point = util.clamp(rec.start_point+d/10,(1+(8*(rec.clip-1))),(8.9+(8*(rec.clip-1))))
+            rec.start_point = util.clamp(rec.start_point+d/10,(1+(eight*(rec.clip-1))),(eight+ 0.9+(eight*(rec.clip-1))))
           elseif d < 0 then
-            rec.start_point = util.clamp(rec.start_point+d/10,(1+(8*(rec.clip-1))),(8.9+(8*(rec.clip-1))))
+            rec.start_point = util.clamp(rec.start_point+d/10,(1+(eight*(rec.clip-1))),(eight+0.9+(eight*(rec.clip-1))))
           end
           softcut.loop_start(1, rec.start_point)
         end
@@ -156,9 +156,9 @@ function encoder_actions.init(n,d)
           end
         else
           if d <= 0 and bank[id][bank[id].id].start_point < bank[id][bank[id].id].end_point + d/loop_enc_resolution then
-            bank[id][bank[id].id].end_point = util.clamp(bank[id][bank[id].id].end_point+d/loop_enc_resolution,(1+(8*(bank[id][bank[id].id].clip-1))),(9+(8*(bank[id][bank[id].id].clip-1))))
+            bank[id][bank[id].id].end_point = util.clamp(bank[id][bank[id].id].end_point+d/loop_enc_resolution,(1+(eight*(bank[id][bank[id].id].clip-1))),((eight+1)+(eight*(bank[id][bank[id].id].clip-1))))
           elseif d > 0 then
-            bank[id][bank[id].id].end_point = util.clamp(bank[id][bank[id].id].end_point+d/loop_enc_resolution,(1+(8*(bank[id][bank[id].id].clip-1))),(9+(8*(bank[id][bank[id].id].clip-1))))
+            bank[id][bank[id].id].end_point = util.clamp(bank[id][bank[id].id].end_point+d/loop_enc_resolution,(1+(eight*(bank[id][bank[id].id].clip-1))),((eight+1)+(eight*(bank[id][bank[id].id].clip-1))))
           end
           softcut.loop_end(id+1, bank[id][bank[id].id].end_point)
         end
@@ -167,9 +167,9 @@ function encoder_actions.init(n,d)
           params:delta("live_buff_rate",d)
         else
           if d <= 0 and rec.start_point < rec.end_point + d/10 then
-            rec.end_point = util.clamp(rec.end_point+d/10,(1+(8*(rec.clip-1))),(9+(8*(rec.clip-1))))
+            rec.end_point = util.clamp(rec.end_point+d/10,(1+(eight*(rec.clip-1))),((eight+1)+(eight*(rec.clip-1))))
           elseif d > 0 then
-            rec.end_point = util.clamp(rec.end_point+d/10,(1+(8*(rec.clip-1))),(9+(8*(rec.clip-1))))
+            rec.end_point = util.clamp(rec.end_point+d/10,(1+(eight*(rec.clip-1))),((eight+1)+(eight*(rec.clip-1))))
           end
           softcut.loop_end(1, rec.end_point-0.01)
         end

@@ -17,7 +17,7 @@ function start_up.init()
     softcut.rate(i, 1)
     softcut.loop_start(i, 1)
     softcut.loop_end(i, 9)
-    softcut.loop_end(1,8.99)
+    softcut.loop_end(1,eight+0.99)
     softcut.loop(i, 1)
     softcut.rec(1, 1)
     softcut.rec_level(1, 1)
@@ -128,7 +128,7 @@ function start_up.init()
     end
   end)
   
-  params:add_option("live_buff_rate", "Live buffer max", {"8 sec", "16 sec", "32 sec"}, 1)
+  params:add_option("live_buff_rate", "Live buffer max", { eight .. " sec", (eight * 2) .. " sec", (eight * 4) .. " sec"}, 1)
   params:set_action("live_buff_rate", function(x)
     local buff_rates = {1,0.5,0.25}
     softcut.rate(1,buff_rates[x])

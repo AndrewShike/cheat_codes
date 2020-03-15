@@ -4,21 +4,21 @@ function arc_actions.init(n,d)
   if arc_param[n] == 1 then
     if grid.alt == 0 then
       local current_difference = (bank[arc_control[n]][bank[arc_control[n]].id].end_point - bank[arc_control[n]][bank[arc_control[n]].id].start_point)
-      if bank[arc_control[n]][bank[arc_control[n]].id].start_point + current_difference <= (9+(8*(bank[arc_control[n]][bank[arc_control[n]].id].clip-1))) then
-        bank[arc_control[n]][bank[arc_control[n]].id].start_point = util.clamp(bank[arc_control[n]][bank[arc_control[n]].id].start_point + d/80,(1+(8*(bank[arc_control[n]][bank[arc_control[n]].id].clip-1))),(9+(8*(bank[arc_control[n]][bank[arc_control[n]].id].clip-1))))
+      if bank[arc_control[n]][bank[arc_control[n]].id].start_point + current_difference <= ((eight+1)+(eight*(bank[arc_control[n]][bank[arc_control[n]].id].clip-1))) then
+        bank[arc_control[n]][bank[arc_control[n]].id].start_point = util.clamp(bank[arc_control[n]][bank[arc_control[n]].id].start_point + d/(eight * 10),(1+(eight*(bank[arc_control[n]][bank[arc_control[n]].id].clip-1))),((eight+1)+(eight*(bank[arc_control[n]][bank[arc_control[n]].id].clip-1))))
         bank[arc_control[n]][bank[arc_control[n]].id].end_point = bank[arc_control[n]][bank[arc_control[n]].id].start_point + current_difference
       else
-        bank[arc_control[n]][bank[arc_control[n]].id].end_point = (9+(8*(bank[arc_control[n]][bank[arc_control[n]].id].clip-1)))
+        bank[arc_control[n]][bank[arc_control[n]].id].end_point = ((eight+1)+(eight*(bank[arc_control[n]][bank[arc_control[n]].id].clip-1)))
         bank[arc_control[n]][bank[arc_control[n]].id].start_point = bank[arc_control[n]][bank[arc_control[n]].id].end_point - current_difference
       end
     else
       for j = 1,16 do
         local current_difference = (bank[arc_control[n]][j].end_point - bank[arc_control[n]][j].start_point)
-        if bank[arc_control[n]][j].start_point + current_difference <= (9+(8*(bank[arc_control[n]][j].clip-1))) then
-          bank[arc_control[n]][j].start_point = util.clamp(bank[arc_control[n]][j].start_point + d/80,(1+(8*(bank[arc_control[n]][j].clip-1))),(9+(8*(bank[arc_control[n]][j].clip-1))))
+        if bank[arc_control[n]][j].start_point + current_difference <= ((eight+1)+(eight*(bank[arc_control[n]][j].clip-1))) then
+          bank[arc_control[n]][j].start_point = util.clamp(bank[arc_control[n]][j].start_point + d/(eight * 10),(1+(eight*(bank[arc_control[n]][j].clip-1))),((eight+1)+(eight*(bank[arc_control[n]][j].clip-1))))
           bank[arc_control[n]][j].end_point = bank[arc_control[n]][j].start_point + current_difference
         else
-          bank[arc_control[n]][j].end_point = (9+(8*(bank[arc_control[n]][j].clip-1)))
+          bank[arc_control[n]][j].end_point = ((eight+1)+(eight*(bank[arc_control[n]][j].clip-1)))
           bank[arc_control[n]][j].start_point = bank[arc_control[n]][j].end_point - current_difference
         end
       end
@@ -27,21 +27,21 @@ function arc_actions.init(n,d)
     softcut.loop_end(arc_control[n]+1,bank[arc_control[n]][bank[arc_control[n]].id].end_point)
   elseif arc_param[n] == 2 then
     if grid.alt == 0 then
-      if bank[arc_control[n]][bank[arc_control[n]].id].start_point < (bank[arc_control[n]][bank[arc_control[n]].id].end_point - d/80) then
-        bank[arc_control[n]][bank[arc_control[n]].id].start_point = util.clamp(bank[arc_control[n]][bank[arc_control[n]].id].start_point + d/80,(1+(8*(bank[arc_control[n]][bank[arc_control[n]].id].clip-1))),(9+(8*(bank[arc_control[n]][bank[arc_control[n]].id].clip-1))))
+      if bank[arc_control[n]][bank[arc_control[n]].id].start_point < (bank[arc_control[n]][bank[arc_control[n]].id].end_point - d/(eight * 10)) then
+        bank[arc_control[n]][bank[arc_control[n]].id].start_point = util.clamp(bank[arc_control[n]][bank[arc_control[n]].id].start_point + d/(eight*10),(1+(eight*(bank[arc_control[n]][bank[arc_control[n]].id].clip-1))),((eight+1)+(eight*(bank[arc_control[n]][bank[arc_control[n]].id].clip-1))))
       end
     else
       for j = 1,16 do
-        bank[arc_control[n]][j].start_point = util.clamp(bank[arc_control[n]][j].start_point + d/80,(1+(8*(bank[arc_control[n]][j].clip-1))),(9+(8*(bank[arc_control[n]][j].clip-1))))
+        bank[arc_control[n]][j].start_point = util.clamp(bank[arc_control[n]][j].start_point + d/(eight * 10),(1+(eight*(bank[arc_control[n]][j].clip-1))),((eight+1)+(eight*(bank[arc_control[n]][j].clip-1))))
       end
     end
     softcut.loop_start(arc_control[n]+1,bank[arc_control[n]][bank[arc_control[n]].id].start_point)
   elseif arc_param[n] == 3 then
     if grid.alt == 0 then
-      bank[arc_control[n]][bank[arc_control[n]].id].end_point = util.clamp(bank[arc_control[n]][bank[arc_control[n]].id].end_point + d/80,(1+(8*(bank[arc_control[n]][bank[arc_control[n]].id].clip-1))),(9+(8*(bank[arc_control[n]][bank[arc_control[n]].id].clip-1))))
+      bank[arc_control[n]][bank[arc_control[n]].id].end_point = util.clamp(bank[arc_control[n]][bank[arc_control[n]].id].end_point + d/(eight * 10),(1+(eight*(bank[arc_control[n]][bank[arc_control[n]].id].clip-1))),((eight+1)+(eight*(bank[arc_control[n]][bank[arc_control[n]].id].clip-1))))
     else
       for j = 1,16 do
-        bank[arc_control[n]][j].end_point = util.clamp(bank[arc_control[n]][j].end_point + d/80,(1+(8*(bank[arc_control[n]][j].clip-1))),(9+(8*(bank[arc_control[n]][j].clip-1))))
+        bank[arc_control[n]][j].end_point = util.clamp(bank[arc_control[n]][j].end_point + d/(eight * 10),(1+(eight*(bank[arc_control[n]][j].clip-1))),((eight+1)+(eight*(bank[arc_control[n]][j].clip-1))))
       end
     end
     softcut.loop_end(arc_control[n]+1,bank[arc_control[n]][bank[arc_control[n]].id].end_point)
@@ -114,8 +114,8 @@ function arc_actions.init(n,d)
     arc_p[n].i = n
     arc_p[n].param = arc_param[n]
     local id = arc_control[n]
-    arc_p[n].start_point = bank[id][bank[id].id].start_point - (8*(bank[id][bank[id].id].clip-1))
-    arc_p[n].end_point = bank[id][bank[id].id].end_point - (8*(bank[id][bank[id].id].clip-1))
+    arc_p[n].start_point = bank[id][bank[id].id].start_point - (eight*(bank[id][bank[id].id].clip-1))
+    arc_p[n].end_point = bank[id][bank[id].id].end_point - (eight*(bank[id][bank[id].id].clip-1))
     arc_p[n].prev_tilt = slew_counter[id].prev_tilt
     arc_p[n].tilt = bank[id][bank[id].id].tilt
     arc_pat[n]:watch(arc_p[n])

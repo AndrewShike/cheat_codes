@@ -277,7 +277,7 @@ function grid_actions.init(x,y,z)
           end
           local current = math.sqrt(math.abs(x-3))
           if bank[current][bank[current].id].mode == 1 then
-            bank[current][bank[current].id].sample_end = 8
+            bank[current][bank[current].id].sample_end = eight
           else
             bank[current][bank[current].id].sample_end = clip[bank[current][bank[current].id].clip].sample_length
           end
@@ -293,7 +293,7 @@ function grid_actions.init(x,y,z)
     
     for i = 7,5,-1 do
       if x == 16 and z == 1 and y == i then
-        --softcut.position(1,1+(8*(7-y)))
+        --softcut.position(1,1+(eight*(7-y)))
         --softcut.fade_time(1,0.1)
         --softcut.recpre_slew_time(1,0.1)
         softcut.level_slew_time(1,0.5)
@@ -302,12 +302,12 @@ function grid_actions.init(x,y,z)
         local old_clip = rec.clip
         
         for go = 1,2 do
-        local old_min = (1+(8*(rec.clip-1)))
-        local old_max = (9+(8*(rec.clip-1)))
+        local old_min = (1+(eight*(rec.clip-1)))
+        local old_max = (eight+1+(eight*(rec.clip-1)))
         local old_range = old_min - old_max
         rec.clip = 8-y
-        local new_min = (1+(8*(rec.clip-1)))
-        local new_max = (9+(8*(rec.clip-1)))
+        local new_min = (1+(eight*(rec.clip-1)))
+        local new_max = ((eight+1)+(eight*(rec.clip-1)))
         local new_range = new_max - new_min
         local current_difference = (rec.end_point - rec.start_point)
         rec.start_point = (((rec.start_point - old_min) * new_range) / old_range) + new_min

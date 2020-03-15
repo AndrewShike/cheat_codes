@@ -7,6 +7,8 @@
 -- for in-app instruction manual
 -- -------------------------------
 
+eight = 10
+
 --local pattern_time = require 'pattern_time'
 local pattern_time = include 'lib/cc_pattern_time'
 fileselect = require 'fileselect'
@@ -34,7 +36,7 @@ arc_offset = 0 --IMPORTANT TO REVISIT
 clip = {}
 for i = 1,3 do
   clip[i] = {}
-  clip[i].length = 90
+  clip[i].length = (eight+1) * 10
   clip[i].sample_length = nil
   clip[i].start_point = nil
   clip[i].end_point = nil
@@ -552,7 +554,7 @@ function init()
   rec.state = 1
   rec.clip = 1
   rec.start_point = 1
-  rec.end_point = 9
+  rec.end_point = (eight+1)
   rec.loop = 1
   rec.clear = 0
   
@@ -986,8 +988,8 @@ end
 function slice()
   for i = 1,3 do
     for j = 1,16 do
-      bank[i][j].start_point = 1+((8/16)*(j-1))
-      bank[i][j].end_point = 1+((8/16)*j)
+      bank[i][j].start_point = 1+((eight/16)*(j-1))
+      bank[i][j].end_point = 1+((eight/16)*j)
     end
   end
 end
@@ -1032,9 +1034,9 @@ function reset_all_banks()
       bank[i][k] = {}
       bank[i][k].clip = 1
       bank[i][k].mode = 1
-      bank[i][k].start_point = 1+((8/16)*(k-1))
-      bank[i][k].end_point = 1+((8/16)*k)
-      bank[i][k].sample_end = 8
+      bank[i][k].start_point = 1+((eight/16)*(k-1))
+      bank[i][k].end_point = 1+((eight/16)*k)
+      bank[i][k].sample_end = eight
       bank[i][k].rate = 1.0
       bank[i][k].left_delay_time = 0.5
       bank[i][k].right_delay_time = 0.5
@@ -1094,7 +1096,7 @@ function cheat(b,i)
     softcut.level_cut_cut(b+1,5,util.linlin(-1,1,0,1,bank[b][i].pan)*(bank[b][i].left_delay_level*bank[b][i].level))
     softcut.level_cut_cut(b+1,6,util.linlin(-1,1,1,0,bank[b][i].pan)*(bank[b][i].right_delay_level*bank[b][i].level))
   end
-  if bank[b][i].end_point == 9 or bank[b][i].end_point == 17 or bank[b][i].end_point == 25 then
+  if bank[b][i].end_point == (eight+1) or bank[b][i].end_point == ((eight * 2)+1) or bank[b][i].end_point == ((eight * 3)+1) then
     bank[b][i].end_point = bank[b][i].end_point-0.01
   end
   softcut.loop_start(b+1,bank[b][i].start_point)
@@ -1272,25 +1274,28 @@ function update_delays()
 end
 
 function load_sample(file,sample)
+  
+  softcut.buffer_clear_region(1+(eight * (sample-1)), eight + 0.05)
+  
   if file ~= "-" then
     local ch, len = audio.file_info(file)
-    if len/48000 <=90 then
-      if len/48000 > 8 then
-        clip[sample].sample_length = 8
+    if len/48000 <=((eight+1) * 10) then
+      if len/48000 > eight then
+        clip[sample].sample_length = eight
       else
         clip[sample].sample_length = len/48000
       end
     else
-      clip[sample].sample_length = 8
+      clip[sample].sample_length = eight
     end
-    softcut.buffer_read_mono(file, 0, 1+(8 * (sample-1)), 8.05, 1, 2)
+    softcut.buffer_read_mono(file, 0, 1+(eight * (sample-1)), eight + 0.05, 1, 2)
   end
 end
 
 function save_sample(i)
   local name = "cc_"..os.date("%y%m%d_%X-buff")..i..".wav"
   local save_pos = i - 1
-  softcut.buffer_write_mono(_path.dust.."/audio/"..name,1+(8*save_pos),8,1)
+  softcut.buffer_write_mono(_path.dust.."/audio/"..name,1+(eight*save_pos),eight,1)
 end
 
 function key(n,z)
@@ -1397,12 +1402,12 @@ end
 
 function clip_jump(i,s,y,z)
   for go = 1,2 do
-    local old_min = (1+(8*(bank[i][s].clip-1)))
-    local old_max = (9+(8*(bank[i][s].clip-1)))
+    local old_min = (1+(eight*(bank[i][s].clip-1)))
+    local old_max = (eight+1+(eight*(bank[i][s].clip-1)))
     local old_range = old_min - old_max
     bank[i][s].clip = math.abs(y-5)
-    local new_min = (1+(8*(bank[i][s].clip-1)))
-    local new_max = (9+(8*(bank[i][s].clip-1)))
+    local new_min = (1+(eight*(bank[i][s].clip-1)))
+    local new_max = (1+eight+(eight*(bank[i][s].clip-1)))
     local new_range = new_max - new_min
     local current_difference = (bank[i][s].end_point - bank[i][s].start_point)
     bank[i][s].start_point = (((bank[i][s].start_point - old_min) * new_range) / old_range) + new_min
@@ -1686,10 +1691,10 @@ function arc_pattern_execute(entry)
   local param = entry.param
   arc_param[i] = param
   if arc_param[i] ~= 4 then
-    bank[id][bank[id].id].start_point = (entry.start_point + (8*(bank[id][bank[id].id].clip-1)) + arc_offset)
-    bank[id][bank[id].id].end_point = (entry.end_point + (8*(bank[id][bank[id].id].clip-1)) + arc_offset)
-    softcut.loop_start(id+1, (entry.start_point + (8*(bank[id][bank[id].id].clip-1))) + arc_offset)
-    softcut.loop_end(id+1, (entry.end_point + (8*(bank[id][bank[id].id].clip-1))) + arc_offset)
+    bank[id][bank[id].id].start_point = (entry.start_point + (eight*(bank[id][bank[id].id].clip-1)) + arc_offset)
+    bank[id][bank[id].id].end_point = (entry.end_point + (eight*(bank[id][bank[id].id].clip-1)) + arc_offset)
+    softcut.loop_start(id+1, (entry.start_point + (eight*(bank[id][bank[id].id].clip-1))) + arc_offset)
+    softcut.loop_end(id+1, (entry.end_point + (eight*(bank[id][bank[id].id].clip-1))) + arc_offset)
   else
     -- DO SOMETHING WITH TILT
     slew_filter(id,entry.prev_tilt,entry.tilt,bank[id][bank[id].id].q,bank[id][bank[id].id].q,15)
@@ -1765,29 +1770,29 @@ arc_redraw = function()
   a:all(0)
   for i = 1,3 do
     if arc_param[i] == 1 then
-      local start_to_led = (bank[arc_control[i]][bank[arc_control[i]].id].start_point-1)-(8*(bank[arc_control[i]][bank[arc_control[i]].id].clip-1))
-      local end_to_led = (bank[arc_control[i]][bank[arc_control[i]].id].end_point-1)-(8*(bank[arc_control[i]][bank[arc_control[i]].id].clip-1))
+      local start_to_led = (bank[arc_control[i]][bank[arc_control[i]].id].start_point-1)-(eight*(bank[arc_control[i]][bank[arc_control[i]].id].clip-1))
+      local end_to_led = (bank[arc_control[i]][bank[arc_control[i]].id].end_point-1)-(eight*(bank[arc_control[i]][bank[arc_control[i]].id].clip-1))
       if start_to_led <= end_to_led then
-        a:segment(i, util.linlin(0, 8, tau*(1/4), tau*1.23, start_to_led), util.linlin(0, 8, (tau*(1/4))+0.1, tau*1.249999, end_to_led), 15)
+        a:segment(i, util.linlin(0, eight, tau*(1/4), tau*1.23, start_to_led), util.linlin(0, eight, (tau*(1/4))+0.1, tau*1.249999, end_to_led), 15)
       else
-        a:segment(i, util.linlin(0, 8, (tau*(1/4))+0.1, tau*1.23, end_to_led), util.linlin(0, 8, tau*(1/4), tau*1.249999, start_to_led), 15)
+        a:segment(i, util.linlin(0, eight, (tau*(1/4))+0.1, tau*1.23, end_to_led), util.linlin(0, eight, tau*(1/4), tau*1.249999, start_to_led), 15)
       end
     end
     if arc_param[i] == 2 then
-      local start_to_led = (bank[arc_control[i]][bank[arc_control[i]].id].start_point-1)-(8*(bank[arc_control[i]][bank[arc_control[i]].id].clip-1))
-      local end_to_led = (bank[arc_control[i]][bank[arc_control[i]].id].end_point-1)-(8*(bank[arc_control[i]][bank[arc_control[i]].id].clip-1))
-      local playhead_to_led = util.linlin(1,9,1,64,(poll_position_new[i+1] - (8*(bank[i][bank[i].id].clip-1))))
+      local start_to_led = (bank[arc_control[i]][bank[arc_control[i]].id].start_point-1)-(eight*(bank[arc_control[i]][bank[arc_control[i]].id].clip-1))
+      local end_to_led = (bank[arc_control[i]][bank[arc_control[i]].id].end_point-1)-(eight*(bank[arc_control[i]][bank[arc_control[i]].id].clip-1))
+      local playhead_to_led = util.linlin(1,(eight+1),1,64,(poll_position_new[i+1] - (eight*(bank[i][bank[i].id].clip-1))))
       a:led(i,(math.floor(playhead_to_led))+16,5)
-      a:led(i,(math.floor(util.linlin(0,8,1,64,start_to_led)))+16,15)
-      a:led(i,(math.floor(util.linlin(0,8,1,64,end_to_led)))+17,8)
+      a:led(i,(math.floor(util.linlin(0,eight,1,64,start_to_led)))+16,15)
+      a:led(i,(math.floor(util.linlin(0,eight,1,64,end_to_led)))+17,8)
     end
     if arc_param[i] == 3 then
-      local start_to_led = (bank[arc_control[i]][bank[arc_control[i]].id].start_point-1)-(8*(bank[arc_control[i]][bank[arc_control[i]].id].clip-1))
-      local end_to_led = (bank[arc_control[i]][bank[arc_control[i]].id].end_point-1)-(8*(bank[arc_control[i]][bank[arc_control[i]].id].clip-1))
-      local playhead_to_led = util.linlin(1,9,1,64,(poll_position_new[i+1] - (8*(bank[i][bank[i].id].clip-1))))
+      local start_to_led = (bank[arc_control[i]][bank[arc_control[i]].id].start_point-1)-(eight*(bank[arc_control[i]][bank[arc_control[i]].id].clip-1))
+      local end_to_led = (bank[arc_control[i]][bank[arc_control[i]].id].end_point-1)-(eight*(bank[arc_control[i]][bank[arc_control[i]].id].clip-1))
+      local playhead_to_led = util.linlin(1,(eight+1),1,64,(poll_position_new[i+1] - (eight*(bank[i][bank[i].id].clip-1))))
       a:led(i,(math.floor(playhead_to_led))+16,5)
-      a:led(i,(math.floor(util.linlin(0,8,1,64,end_to_led)))+17,15)
-      a:led(i,(math.floor(util.linlin(0,8,1,64,start_to_led)))+16,8)
+      a:led(i,(math.floor(util.linlin(0,eight,1,64,end_to_led)))+17,15)
+      a:led(i,(math.floor(util.linlin(0,eight,1,64,start_to_led)))+16,8)
     end
     if arc_param[i] == 4 then
       local tilt_to_led = slew_counter[i].slewedVal
