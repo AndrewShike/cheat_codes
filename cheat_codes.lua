@@ -1436,7 +1436,7 @@ function grid_redraw()
       for k = 1,4 do
         k = k+(5*j)
         for i = 8,5,-1 do
-          g:led(k,i,3)
+          g:led(k,i,4)
         end
       end
     end
@@ -1444,7 +1444,7 @@ function grid_redraw()
     for j = 0,2 do
       for k = (5-j),(15-j),5 do
         for i = (4-j),1,-1 do
-          g:led(k,i,3)
+          g:led(k,i,4)
         end
       end
     end
@@ -1468,7 +1468,7 @@ function grid_redraw()
           g:led(2+(5*(i-1)),1,5)
         else
           grid_pat[i].led = 0
-          g:led(2+(5*(i-1)),1,3)
+          g:led(2+(5*(i-1)),1,4)
         end
       else
         if grid_pat[i].rec == 1 then
@@ -1487,7 +1487,7 @@ function grid_redraw()
           g:led(2+(5*(i-1)),1,5)
         else
           grid_pat[i].led = 0
-          g:led(2+(5*(i-1)),1,3)
+          g:led(2+(5*(i-1)),1,4)
         end
       end
     end
@@ -1510,8 +1510,8 @@ function grid_redraw()
        g:led(3+(5*(i-1)),1,15)
        g:led(3+(5*(i-1)),2,15)
       else
-        g:led(3+(5*(i-1)),1,3)
-        g:led(3+(5*(i-1)),2,3)
+        g:led(3+(5*(i-1)),1,4)
+        g:led(3+(5*(i-1)),2,4)
       end
     end
     
@@ -1519,7 +1519,7 @@ function grid_redraw()
       g:led(e.x, e.y,15)
     end
     
-    g:led(16,8,(grid.alt*12)+3)
+    g:led(16,8,(grid.alt*12)+4)
     
     g:led(1,math.abs(bank[1][bank[1].id].clip-5),8)
     g:led(6,math.abs(bank[2][bank[2].id].clip-5),8)
@@ -1538,9 +1538,9 @@ function grid_redraw()
     end
     
     if rec.clear == 0 then
-      g:led(16,8-rec.clip,(10*rec.state)+3)
+      g:led(16,8-rec.clip,(10*rec.state)+4)
     elseif rec.clear == 1 then
-      g:led(16,8-rec.clip,3)
+      g:led(16,8-rec.clip,4)
     end
   
   else
@@ -1618,8 +1618,8 @@ function grid_redraw()
       end
     end
     
-    g:led(16,8,(grid.alt_pp*12)+3)
-    g:led(16,2,(grid.loop_mod*9)+3)
+    g:led(16,8,(grid.alt_pp*12)+4)
+    g:led(16,2,(grid.loop_mod*9)+4)
     
     if grid.loop_mod == 1 then
       
